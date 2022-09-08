@@ -3,16 +3,10 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 const datetimePickerEl = document.querySelector('input#datetime-picker');
 const dataBtnStartEl = document.querySelector('button[data-start]');
-
-// const currentDate = Date.now();
 let selectedDate = null;
-// let delta = null;
-// let intervalId = null;
-// console.log(dataBtnStartEl);
-// console.log(datetimePickerEl);
-
+// Блокування кнопки Start
 dataBtnStartEl.disabled = true;
-
+// Об'єкт налаштування для flatpickr
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -27,23 +21,20 @@ const options = {
     } else {
       dataBtnStartEl.disabled = false;
     }
-
-    // console.log(currentDate);
-    // console.log(selectedDate);
-    // console.log(delta);
   },
 };
 
 flatpickr(datetimePickerEl, options);
-
+// Прослуховування кнопки Start для виклику Таймера
 dataBtnStartEl.addEventListener('click', () => {
   timer.start();
 });
-
+// Обєкт ТАЙМЕР
 const timer = {
   delta: null,
   intervalId: null,
   rootSelector: document.querySelector('.timer'),
+  // метод запуску ТАЙМЕРА
   start() {
     this.intervalId = setInterval(() => {
       this.delta = selectedDate - Date.now();
@@ -51,9 +42,10 @@ const timer = {
         this.stop;
         return;
       }
-      console.log(this.delta);
+      //   console.log(this.delta);
+      // виклик і реструктуризація результатів виконання функці (Переведення мс у дн, год, хв, сек)
       const { days, hours, minutes, seconds } = this.convertMs(this.delta);
-      //   console.log(days, hours, minutes, seconds);
+      // присвоєння значень в спани + додавання "0" спереду якщо символ один
       this.rootSelector.querySelector('[data-days]').textContent =
         this.addLeadingZero(days);
       this.rootSelector.querySelector('[data-hours]').textContent =
@@ -64,11 +56,11 @@ const timer = {
         this.addLeadingZero(seconds);
     }, 1000);
   },
-
+  // Зупинка таймера
   stop() {
     clearInterval(this.intervalId);
   },
-
+  // Переведення мілісекунд у дні, години, хвилини, секунди
   convertMs(ms) {
     // Number of milliseconds per unit of time
     const second = 1000;
@@ -87,7 +79,7 @@ const timer = {
     //   console.log({ days, hours, minutes, seconds });
     return { days, hours, minutes, seconds };
   },
-
+  // метод автозаповнення, Start - спереду, якщо менше "n"(тут 2) символів додай "0" (символ) спереду.
   addLeadingZero(value) {
     return String(value).padStart(2, 0);
   },

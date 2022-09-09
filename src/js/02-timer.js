@@ -1,5 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import Notiflix from 'notiflix';
 
 const datetimePickerEl = document.querySelector('input#datetime-picker');
 const dataBtnStartEl = document.querySelector('button[data-start]');
@@ -16,7 +17,7 @@ const options = {
     selectedDate = selectedDates[0];
     // console.log(selectedDate);
     if (selectedDate < Date.now()) {
-      alert('Please choose a date in the future');
+      Notiflix.Notify.failure('Please choose a date in the future');
       //   console.log(Date.now());
     } else {
       dataBtnStartEl.disabled = false;
@@ -44,6 +45,8 @@ const timer = {
       }
       //   console.log(this.delta);
       // виклик і реструктуризація результатів виконання функці (Переведення мс у дн, год, хв, сек)
+      dataBtnStartEl.disabled = true;
+      datetimePickerEl.disabled = true;
       const { days, hours, minutes, seconds } = this.convertMs(this.delta);
       // присвоєння значень в спани + додавання "0" спереду якщо символ один
       this.rootSelector.querySelector('[data-days]').textContent =
